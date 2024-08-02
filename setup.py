@@ -19,19 +19,7 @@ setuptools.setup(
     classifiers=[],
     python_requires=">=3.8",
     install_requires=[
-        # By definition, a Custom Component depends on Streamlit.
-        # If your component has other Python dependencies, list
-        # them here.
+        "opencv-python>=4.6.0.66",
         "streamlit >= 1.37.0",
     ],
-    extras_require={
-        "devel": [
-            "wheel",
-            "pytest==7.4.0",
-            "playwright==1.39.0",
-            "requests==2.31.0",
-            "pytest-playwright-snapshot==1.0",
-            "pytest-rerunfailures==12.0",
-        ]
-    }
 )
