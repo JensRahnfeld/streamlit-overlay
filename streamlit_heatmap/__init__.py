@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import streamlit.components.v1 as components
 
+
 _RELEASE = True
 
 # Declare a Streamlit component. `declare_component` returns a function
@@ -38,9 +39,9 @@ def heatmap_visualizer(image: np.ndarray,
 
     Parameters
     ----------
-    image: np.ndarray
+    image: np.ndarray of shape (height, width, 3)
         The image to display.
-    mask: np.ndarray
+    mask: np.ndarray of shape (height, width)
         The mask to overlay on the image.
     colormap: int
         The OpenCV colormap to use when overlaying the mask.
@@ -54,7 +55,7 @@ def heatmap_visualizer(image: np.ndarray,
     int
     """
     if mask is None:
-        height, width = image.shape[0], image.shape[1]
+        height, width = image.shape[1], image.shape[2]
         mask = np.zeros((height, width), dtype=np.uint8)
 
     mask = (mask - mask.min()) / (mask.max() - mask.min() + 1e-6)
