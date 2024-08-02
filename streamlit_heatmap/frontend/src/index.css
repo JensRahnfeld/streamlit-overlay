@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mode colors */
+    --primary: 0 100% 66.3%; /* Corresponds to #FF4B4B */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
+    --background: 0 0% 100%; /* White */
+    --foreground: 220 9% 19%; /* Corresponds to #31333F */
+    --card: 220 14% 96%; /* Corresponds to #F0F2F6 */
+    --card-foreground: 220 9% 19%; /* Dark gray text on cards */
+    --popover: 220 14% 96%; /* Same as card for popovers */
+    --popover-foreground: 220 9% 19%; /* Dark gray text in popovers */
+    --secondary: 220 14% 96%; /* Light gray for secondary elements */
+    --secondary-foreground: 220 9% 19%; /* Dark gray for text on secondary elements */
+    --muted: 0 0% 95%; /* Very light gray for muted elements */
+    --muted-foreground: 220 9% 50%; /* Medium gray for text on muted elements */
+    --accent: 0 100% 66.3%; /* Same as primary for accent */
+    --accent-foreground: 0 0% 100%; /* White text on accent */
+    --destructive: 0 84.2% 60.2%; /* Red for destructive actions */
+    --destructive-foreground: 0 0% 100%; /* White text on destructive actions */
+    --border: 0 0% 90%; /* Light gray for borders */
+    --input: 0 0% 95%; /* Light gray for input backgrounds */
+    --ring: 0 100% 66.3%; /* Primary color for focus rings */
+    --radius: 0.5rem;
+    --chart-1: 0 100% 66.3%;
+    --chart-2: 220 100% 56%;
+    --chart-3: 120 100% 56%;
+    --chart-4: 45 100% 56%;
+    --chart-5: 0 100% 56%;
+  }
+
+  .dark {
+    /* Dark mode colors */
+    --primary: 0 100% 66.3%; /* Same primary color as light mode */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
+    --background: 220 9% 13%; /* Dark gray for background */
+    --foreground: 0 0% 87%; /* Light gray for text */
+    --card: 220 9% 20%; /* Darker gray for cards */
+    --card-foreground: 0 0% 87%; /* Light gray for text on cards */
+    --popover: 220 9% 20%; /* Dark gray for popovers */
+    --popover-foreground: 0 0% 87%; /* Light gray for text in popovers */
+    --secondary: 220 9% 27%; /* Medium dark gray for secondary elements */
+    --secondary-foreground: 0 0% 87%; /* Light gray for text on secondary elements */
+    --muted: 220 9% 25%; /* Dark gray for muted elements */
+    --muted-foreground: 0 0% 60%; /* Light gray for text on muted elements */
+    --accent: 0 100% 66.3%; /* Same as primary for accent */
+    --accent-foreground: 0 0% 100%; /* White text on accent */
+    --destructive: 0 84.2% 60.2%; /* Red for destructive actions */
+    --destructive-foreground: 0 0% 100%; /* White text on destructive actions */
+    --border: 220 9% 27%; /* Dark gray for borders */
+    --input: 220 9% 20%; /* Dark gray for input backgrounds */
+    --ring: 0 100% 66.3%; /* Primary color for focus rings */
+    --chart-1: 0 100% 66.3%;
+    --chart-2: 220 100% 56%;
+    --chart-3: 120 100% 56%;
+    --chart-4: 45 100% 56%;
+    --chart-5: 0 100% 56%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
