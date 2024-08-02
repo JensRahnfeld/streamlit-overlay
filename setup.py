@@ -20,6 +20,6 @@ setuptools.setup(
     python_requires=">=3.8",
     install_requires=[
         "opencv-python>=4.6.0.66",
-        "streamlit >= 1.37.0",
+        "streamlit>=1.22.0",
     ],
 )
