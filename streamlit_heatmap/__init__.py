@@ -5,6 +5,8 @@ import cv2
 import numpy as np
 import streamlit.components.v1 as components
 
+from .utils import compress_images
+
 
 _RELEASE = False
 
@@ -73,8 +75,8 @@ def heatmap_visualizer(images: np.ndarray,
             heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
             heatmaps[idx] = heatmap
 
-    component_value = _component_func(images=images.tobytes(),
-                                      heatmaps=heatmaps.tobytes(),
+    component_value = _component_func(images=compress_images(images),
+                                      heatmaps=compress_images(heatmaps),
                                       width=width,
                                       height=height,
                                       numFrames=num_frames,
