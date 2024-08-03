@@ -17,43 +17,52 @@ import { Settings as SettingsIcon } from "lucide-react";
 
 
 interface AppProps {
-  image: Uint8Array;
-  heatmap: Uint8Array;
+  images: Uint8Array;
+  heatmaps: Uint8Array;
   width: number;
   height: number;
+  numFrames: number;
   alpha: number;
 };
 
 const App: React.FC<ComponentProps> = (props: any) => {
-  debugger;
-  const { image, heatmap, width, height, alpha: alphaInit }: AppProps = props.args;
+  const { images, heatmaps, width, height, numFrames, alpha: alphaInit }: AppProps = props.args;
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [displayHeatmap, setDisplayHeatmap] = useState<boolean>(false);
+  const [displayheatmap, setDisplayheatmap] = useState<boolean>(false);
   const [alpha, setAlpha] = useState<number>(alphaInit);
+  const [frameIdx, setFrameIdx] = useState<number>(0);
 
   useEffect(() => {
     Streamlit.setFrameHeight();
   })
 
   useEffect(() => {
-    if (!image || !canvasRef.current) return;
+    if (!images || !canvasRef.current) return;
 
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
 
-    // Draw the image data on the canvas
-    let canvasData = new ImageData(Uint8ClampedArray.from(image), width, height);
-    if (displayHeatmap) {
-      for (let index = 0; index < width * height; index++) {
-        canvasData.data[index * 4] = (1 - alpha) * image[index * 4] + alpha * heatmap[index * 4];
-        canvasData.data[index * 4 + 1] = (1 - alpha) * image[index * 4 + 1] + alpha * heatmap[index * 4 + 1];
-        canvasData.data[index * 4 + 2] = (1 - alpha) * image[index * 4 + 2] + alpha * heatmap[index * 4 + 2];
-      }
-    }
-    ctx.putImageData(canvasData, 0, 0);
-  }, [image, heatmap, displayHeatmap, alpha])
+    // Draw the images data on the canvas
+    let canvasData = new Uint8ClampedArray(width * height * 4);
+    for (let index = 0; index < width * height; index++) {
+      const offset = (frameIdx * width * height + index) * 4;
 
-  // return the mouse pointer click coordinates in the image coordinate system
+      if (displayheatmap) {
+          canvasData[index * 4] = (1 - alpha) * images[offset] + alpha * heatmaps[offset];
+          canvasData[index * 4 + 1] = (1 - alpha) * images[offset + 1] + alpha * heatmaps[offset + 1];
+          canvasData[index * 4 + 2] = (1 - alpha) * images[offset + 2] + alpha * heatmaps[offset + 2];
+      }
+      else {
+          canvasData[index * 4] = images[offset];
+          canvasData[index * 4 + 1] = images[offset + 1];
+          canvasData[index * 4 + 2] = images[offset + 2];
+      }
+      canvasData[index * 4 + 3] = 255;
+    }
+    ctx.putImageData(new ImageData(canvasData, width, height), 0, 0);
+  }, [images, heatmaps, displayheatmap, alpha, frameIdx]);
+
+  // return the mouse pointer click coordinates in the images coordinate system
   const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current) return;
 
@@ -90,12 +99,18 @@ const App: React.FC<ComponentProps> = (props: any) => {
               </Sheet>
             </div>
             <div className="flex w-full justify-end items-center space-x-2">
-              <Label>Display Heatmap</Label>
-              <Switch checked={displayHeatmap} onCheckedChange={setDisplayHeatmap}/>
+              <Label>Display heatmaps</Label>
+              <Switch checked={displayheatmap} onCheckedChange={setDisplayheatmap}/>
             </div>
           </div>
           <canvas className="w-full h-full object-contain" width={width} height={height} ref={canvasRef} onClick={handleCanvasClick}>
           </canvas>
+          {numFrames > 1 && <Slider 
+            value={[frameIdx]}
+            min={0} max={numFrames - 1} 
+            step={1}
+            onValueChange={newFrameIdx => setFrameIdx(newFrameIdx[0])}
+            />}
         </div>
     )
   }

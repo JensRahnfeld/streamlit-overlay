@@ -30,18 +30,18 @@ else:
     _component_func = components.declare_component("heatmap_visualizer", path=build_dir)
 
 
-def heatmap_visualizer(image: np.ndarray,
-                 mask: Union[np.ndarray, None] = None,
-                 colormap: int = cv2.COLORMAP_JET,
-                 alpha: float = 0.5,
-                 key: str = None):
+def heatmap_visualizer(images: np.ndarray,
+                       masks: Union[np.ndarray, None] = None,
+                       colormap: int = cv2.COLORMAP_JET,
+                       alpha: float = 0.5,
+                       key: str = None):
     """Create a new instance of "heatmap_visualizer".
 
     Parameters
     ----------
-    image: np.ndarray of shape (height, width, 3)
+    images: np.ndarray of shape (height, width, 3) or (num_frames, height, width, 3)
         The image to display.
-    mask: np.ndarray of shape (height, width)
+    masks: np.ndarray of shape (height, width) or (num_frames, height, width)
         The mask to overlay on the image.
     colormap: int
         The OpenCV colormap to use when overlaying the mask.
@@ -54,23 +54,35 @@ def heatmap_visualizer(image: np.ndarray,
     -------
     int
     """
-    height, width, num_channels = image.shape
-    if mask is None:
-        mask = np.zeros((height, width), dtype=np.uint8)
+    if len(images.shape) == 3:
+        images = images[None, :]
+    num_frames, height, width, num_channels = images.shape
 
-    mask = (mask - mask.min()) / (mask.max() - mask.min() + 1e-6)
-    heatmap = cv2.applyColorMap(np.uint8(255 * mask), colormap)
-    heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
+    if masks is None:
+        mask = np.zeros((height, width), dtype=np.uint8)
+        heatmap = cv2.applyColorMap(np.uint8(255 * mask), colormap)
+        heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
+        heatmaps = np.repeat(heatmap[None, :], repeats=num_frames, axis=0)
+    else:
+        if len(masks.shape) == 2:
+            masks = masks[None, :]
+        heatmaps = np.zeros((num_frames, height, width, 3), dtype=np.uint8)
+        for idx, mask in enumerate(masks):
+            mask = (mask - mask.min()) / (mask.max() - mask.min() + 1e-6)
+            heatmap = cv2.applyColorMap(np.uint8(255 * mask), colormap)
+            heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
+            heatmaps[idx] = heatmap
 
     # rgb -> rgba
     if num_channels == 3:
-        image = np.concatenate([image, np.ones((height, width, 1), dtype=np.uint8) * 255], axis=-1)
-    heatmap = np.concatenate([heatmap, np.ones((height, width, 1), dtype=np.uint8) * 255], axis=-1)
+        images = np.concatenate([images, np.ones((num_frames, height, width, 1), dtype=np.uint8) * 255], axis=-1)
+    heatmaps = np.concatenate([heatmaps, np.ones((num_frames, height, width, 1), dtype=np.uint8) * 255], axis=-1)
 
-    component_value = _component_func(image=image.tobytes(),
-                                      heatmap=heatmap.tobytes(),
+    component_value = _component_func(images=images.tobytes(),
+                                      heatmaps=heatmaps.tobytes(),
                                       width=width,
                                       height=height,
+                                      numFrames=num_frames,
                                       alpha=alpha,
                                       key=key,
                                       default=0)
