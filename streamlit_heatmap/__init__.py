@@ -73,11 +73,6 @@ def heatmap_visualizer(images: np.ndarray,
             heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
             heatmaps[idx] = heatmap
 
-    # rgb -> rgba
-    if num_channels == 3:
-        images = np.concatenate([images, np.ones((num_frames, height, width, 1), dtype=np.uint8) * 255], axis=-1)
-    heatmaps = np.concatenate([heatmaps, np.ones((num_frames, height, width, 1), dtype=np.uint8) * 255], axis=-1)
-
     component_value = _component_func(images=images.tobytes(),
                                       heatmaps=heatmaps.tobytes(),
                                       width=width,

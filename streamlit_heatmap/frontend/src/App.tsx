@@ -45,7 +45,7 @@ const App: React.FC<ComponentProps> = (props: any) => {
     // Draw the images data on the canvas
     let canvasData = new Uint8ClampedArray(width * height * 4);
     for (let index = 0; index < width * height; index++) {
-      const offset = (frameIdx * width * height + index) * 4;
+      const offset = (frameIdx * width * height + index) * 3;
 
       if (displayheatmap) {
           canvasData[index * 4] = (1 - alpha) * images[offset] + alpha * heatmaps[offset];
