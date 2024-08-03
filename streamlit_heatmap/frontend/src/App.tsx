@@ -16,8 +16,17 @@ import { Button } from "./components/ui/button";
 import { Settings as SettingsIcon } from "lucide-react";
 
 
+interface AppProps {
+  image: Uint8Array;
+  heatmap: Uint8Array;
+  width: number;
+  height: number;
+  alpha: number;
+};
+
 const App: React.FC<ComponentProps> = (props: any) => {
-  const { image, heatmap, alpha: alphaInit } = props.args;
+  debugger;
+  const { image, heatmap, width, height, alpha: alphaInit }: AppProps = props.args;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [displayHeatmap, setDisplayHeatmap] = useState<boolean>(false);
   const [alpha, setAlpha] = useState<number>(alphaInit);
@@ -32,35 +41,15 @@ const App: React.FC<ComponentProps> = (props: any) => {
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
 
-    // Deserializing the 3xHxW data array
-    const [height, width] = [image[0].length, image[0][0].length];
-    ctx.canvas.width  = width;
-    ctx.canvas.height = height;
-
-    // Create a new Uint8ClampedArray to hold the image data
-    const canvasDataArray = new Uint8ClampedArray(height * width * 4);
-
-    // Fill the Uint8ClampedArray with pixel data
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const index = (y * width + x) * 4;
-
-        if (displayHeatmap) {
-          canvasDataArray[index] = (1 - alpha) * image[0][y][x] + alpha * heatmap[0][y][x];       // R
-          canvasDataArray[index + 1] = (1 - alpha) * image[1][y][x] + alpha * heatmap[1][y][x];   // G
-          canvasDataArray[index + 2] = (1 - alpha) * image[2][y][x] + alpha * heatmap[2][y][x];   // B
-        }
-        else {
-          canvasDataArray[index] = image[0][y][x];       // R
-          canvasDataArray[index + 1] = image[1][y][x];   // G
-          canvasDataArray[index + 2] = image[2][y][x];   // B
-        }
-        canvasDataArray[index + 3] = 255;
+    // Draw the image data on the canvas
+    let canvasData = new ImageData(Uint8ClampedArray.from(image), width, height);
+    if (displayHeatmap) {
+      for (let index = 0; index < width * height; index++) {
+        canvasData.data[index * 4] = (1 - alpha) * image[index * 4] + alpha * heatmap[index * 4];
+        canvasData.data[index * 4 + 1] = (1 - alpha) * image[index * 4 + 1] + alpha * heatmap[index * 4 + 1];
+        canvasData.data[index * 4 + 2] = (1 - alpha) * image[index * 4 + 2] + alpha * heatmap[index * 4 + 2];
       }
     }
-
-    // Draw the image data on the canvas
-    const canvasData = new ImageData(canvasDataArray, width, height);
     ctx.putImageData(canvasData, 0, 0);
   }, [image, heatmap, displayHeatmap, alpha])
 
@@ -105,7 +94,7 @@ const App: React.FC<ComponentProps> = (props: any) => {
               <Switch checked={displayHeatmap} onCheckedChange={setDisplayHeatmap}/>
             </div>
           </div>
-          <canvas className="w-full h-full object-contain" ref={canvasRef} onClick={handleCanvasClick}>
+          <canvas className="w-full h-full object-contain" width={width} height={height} ref={canvasRef} onClick={handleCanvasClick}>
           </canvas>
         </div>
     )

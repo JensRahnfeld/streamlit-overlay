@@ -6,7 +6,7 @@ import numpy as np
 import streamlit.components.v1 as components
 
 
-_RELEASE = True
+_RELEASE = False
 
 # Declare a Streamlit component. `declare_component` returns a function
 # that is used to create instances of the component. We're naming this
@@ -54,17 +54,23 @@ def heatmap_visualizer(image: np.ndarray,
     -------
     int
     """
+    height, width, num_channels = image.shape
     if mask is None:
-        height, width = image.shape[1], image.shape[2]
         mask = np.zeros((height, width), dtype=np.uint8)
 
     mask = (mask - mask.min()) / (mask.max() - mask.min() + 1e-6)
     heatmap = cv2.applyColorMap(np.uint8(255 * mask), colormap)
     heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
-    heatmap = np.moveaxis(heatmap, -1, 0)
 
-    component_value = _component_func(image=image.tolist(),
-                                      heatmap=heatmap.tolist(),
+    # rgb -> rgba
+    if num_channels == 3:
+        image = np.concatenate([image, np.ones((height, width, 1), dtype=np.uint8) * 255], axis=-1)
+    heatmap = np.concatenate([heatmap, np.ones((height, width, 1), dtype=np.uint8) * 255], axis=-1)
+
+    component_value = _component_func(image=image.tobytes(),
+                                      heatmap=heatmap.tobytes(),
+                                      width=width,
+                                      height=height,
                                       alpha=alpha,
                                       key=key,
                                       default=0)
