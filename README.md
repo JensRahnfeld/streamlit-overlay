@@ -73,6 +73,8 @@ Creates an instance of the "overlay" component for use in a Streamlit app. It al
 
 Creates an instance of the "heatmap_overlay" component for overlaying heatmaps, e.g. of attribution maps, over images within a Streamlit app. This component processes the provided masks by applying a colormap, enhancing the visualization of data overlays.
 
+<b>Parameters</b>
+
 - `images`: np.ndarray or List[Image]
 
   The images to display. This can be a single image or a sequence of images (for video). The shape should be (height, width, 3) for a single image or (num_frames, height, width, 3) for a sequence.
