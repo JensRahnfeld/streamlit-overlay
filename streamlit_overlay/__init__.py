@@ -38,6 +38,7 @@ def overlay(images: Union[np.ndarray, List[Image]],
             alpha: float = 0.5,
             key: str = None,
             toggle_label: str = "Display Overlay",
+            fps: int = 30,
             autoplay: bool = False):
     """Create a new instance of "Overlay".
 
@@ -53,6 +54,12 @@ def overlay(images: Union[np.ndarray, List[Image]],
         An optional key that uniquely identifies this component. If this is
         None, and the component's arguments are changed, the component will
         be re-mounted in the Streamlit frontend and lose its current state.
+    toggle_label: str
+        The label to use for the toggle button.
+    fps: int
+        The frames per second to use when displaying a video.
+    autoplay: bool
+        Whether to automatically play the video.
 
     Returns
     -------
@@ -82,6 +89,7 @@ def overlay(images: Union[np.ndarray, List[Image]],
                                       alpha=alpha,
                                       key=key,
                                       toggleLabel=toggle_label,
+                                      fps=fps,
                                       autoplay=autoplay,
                                       default=0)
 
