@@ -1,1 +1,1 @@
-recursive-include streamlit_heatmap/frontend/build *
+recursive-include streamlit_overlay/frontend/build *
