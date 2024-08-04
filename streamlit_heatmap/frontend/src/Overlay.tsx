@@ -27,8 +27,8 @@ interface OverlayProps {
   width: number;
   height: number;
   numFrames: number;
-  alpha: number;
-  toggleLabel: string;
+  alpha?: number;
+  toggleLabel?: string;
   autoplay?: boolean;
 }
 
@@ -39,8 +39,8 @@ const Overlay: React.FC<ComponentProps> = (props: any) => {
     width,
     height,
     numFrames,
-    alpha: alphaInit,
-    toggleLabel,
+    alpha: alphaInit = 0.5,
+    toggleLabel = "Display Overlay",
     autoplay = false,
   }: OverlayProps = props.args;
   const canvasRef = useRef<HTMLCanvasElement>(null);
