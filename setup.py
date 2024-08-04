@@ -3,14 +3,16 @@ from pathlib import Path
 import setuptools
 
 this_directory = Path(__file__).parent
-long_description = (this_directory / "README.md").read_text()
+
+with open(Path(this_directory) / "README.md", encoding="utf-8") as f:
+    long_description = f.read()
 
 setuptools.setup(
-    name="streamlit-heatmap",
-    version="0.0.1",
+    name="streamlit-overlay",
+    version="0.0.2",
     author="Jens Rahnfeld",
     author_email="",
-    description="Streamlit component that allows you to visualize heatmaps",
+    description="Streamlit component that allows you to add overlays to images",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="",
