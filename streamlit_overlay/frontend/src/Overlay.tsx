@@ -29,6 +29,7 @@ interface OverlayProps {
   numFrames: number;
   alpha?: number;
   toggleLabel?: string;
+  fps?: number;
   autoplay?: boolean;
 }
 
@@ -41,6 +42,7 @@ const Overlay: React.FC<ComponentProps> = (props: any) => {
     numFrames,
     alpha: alphaInit = 0.5,
     toggleLabel = "Display Overlay",
+    fps = 30,
     autoplay = false,
   }: OverlayProps = props.args;
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -166,6 +168,7 @@ const Overlay: React.FC<ComponentProps> = (props: any) => {
           frameIdx={frameIdx}
           setFrameIdx={setFrameIdx}
           numFrames={numFrames}
+          fps={fps}
           loop={loop}
           autoplay={autoplay}
           className={displayControls ? "" : "hidden"}
