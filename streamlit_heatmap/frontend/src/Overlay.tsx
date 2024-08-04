@@ -75,6 +75,7 @@ const Overlay: React.FC<ComponentProps> = (props: any) => {
     if (!ctx) return;
 
     if (displaymask && masks.length > 0) {
+      ctx.clearRect(0, 0, width, height);
       ctx.globalAlpha = 1 - alpha;
       ctx.drawImage(images[frameIdx], 0, 0, width, height);
       ctx.globalAlpha = alpha;
