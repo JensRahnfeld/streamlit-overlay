@@ -99,7 +99,9 @@ const Overlay: React.FC<ComponentProps> = (props: any) => {
     const yRescaled =
       (y * canvasRef.current.height) / canvasRef.current.clientHeight;
 
-    Streamlit.setComponentValue({ MouseClick: [xRescaled, yRescaled] });
+    // Re-render time makes it rather annoying to return mouse click coordinates
+    // Streamlit.setComponentValue({ MouseClick: [xRescaled, yRescaled] });
+    console.log("Mouse Click: ", [xRescaled, yRescaled]);
   };
 
   return (
