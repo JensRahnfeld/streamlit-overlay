@@ -20,7 +20,7 @@ import { Settings as SettingsIcon } from "lucide-react";
 
 import { decompressImages } from "./utils";
 
-interface AppProps {
+interface OverlayProps {
   images: Uint8Array;
   masks: Uint8Array;
   width: number;
@@ -30,7 +30,7 @@ interface AppProps {
   toggleLabel: string;
 }
 
-const App: React.FC<ComponentProps> = (props: any) => {
+const Overlay: React.FC<ComponentProps> = (props: any) => {
   const {
     images: imagesCompressed,
     masks: masksCompressed,
@@ -39,7 +39,7 @@ const App: React.FC<ComponentProps> = (props: any) => {
     numFrames,
     alpha: alphaInit,
     toggleLabel,
-  }: AppProps = props.args;
+  }: OverlayProps = props.args;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [masks, setMasks] = useState<HTMLImageElement[]>([]);
@@ -147,4 +147,4 @@ const App: React.FC<ComponentProps> = (props: any) => {
   );
 };
 
-export default withStreamlitConnection(App);
+export default withStreamlitConnection(Overlay);
