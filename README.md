@@ -2,10 +2,9 @@
     <h2>
         Streamlit-Overlay 🖼️🖌️
     </h2>
-    <b>👌 Simplify adding overlays to images in Streamlit </b>
+    <p><b>👌 Simplify adding overlays to images in Streamlit </b></p>
+    <img src="assets\streamlit-overlay.gif">
 </div>
-
-<img src="assets\streamlit-overlay.gif">
 
 ## Installation
 
