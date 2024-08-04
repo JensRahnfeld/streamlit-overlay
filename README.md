@@ -3,7 +3,7 @@
         Streamlit-Overlay 🖼️🖌️
     </h2>
     <p><b>👌 Simplify adding overlays to images in Streamlit </b></p>
-    <img src="assets\streamlit-overlay.gif">
+    <img src="https://github.com/JensRahnfeld/streamlit-overlay/blob/main/assets/streamlit-overlay.gif">
 </div>
 
 ## Installation
