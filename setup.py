@@ -9,10 +9,10 @@ with open(Path(this_directory) / "README.md", encoding="utf-8") as f:
 
 setuptools.setup(
     name="streamlit-overlay",
-    version="0.0.2",
+    version="0.0.1",
     author="Jens Rahnfeld",
     author_email="",
-    description="Streamlit component that allows you to add overlays to images",
+    description="Streamlit component that simplifies adding overlays to images",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="",
