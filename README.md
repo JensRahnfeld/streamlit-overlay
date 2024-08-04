@@ -36,7 +36,7 @@ will then render a customizable video demo.
 
 ### `streamlit_overlay.overlay(images, masks=[], alpha=0.5, key=None, toggle_label="Display Overlay", fps=30, autoplay=False)`
 
-Creates an instance of an "Overlay" component for use in a Streamlit app. It allows for the overlaying of masks on images or videos, with customizable options for transparency, display controls, and playback settings.
+Creates an instance of the "overlay" component for use in a Streamlit app. It allows for the overlaying of masks on images, with customizable options for transparency, display controls, and playback settings.
 
 <b>Parameters</b>
 
@@ -71,7 +71,7 @@ Creates an instance of an "Overlay" component for use in a Streamlit app. It all
 
 ### `streamlit_overlay.heatmap_overlay(images, masks, colormap=cv2.COLORMAP_JET, toggle_label="Display Heatmap", *args, **kwargs)`
 
-The heatmap_visualizer function creates an instance of a component for overlaying heatmaps over images or videos within a Streamlit app. This component processes the provided masks by applying a colormap, enhancing the visualization of data overlays.
+Creates an instance of the "heatmap_overlay" component for overlaying heatmaps, e.g. of attribution maps, over images within a Streamlit app. This component processes the provided masks by applying a colormap, enhancing the visualization of data overlays.
 
 - `images`: np.ndarray or List[Image]
 
