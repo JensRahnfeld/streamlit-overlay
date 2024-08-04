@@ -37,7 +37,8 @@ def overlay(images: Union[np.ndarray, List[Image]],
             masks: Union[np.ndarray, List[Image]] = [],
             alpha: float = 0.5,
             key: str = None,
-            toggle_label: str = "Display Overlay"):
+            toggle_label: str = "Display Overlay",
+            autoplay: bool = False):
     """Create a new instance of "Overlay".
 
     Parameters
@@ -45,6 +46,9 @@ def overlay(images: Union[np.ndarray, List[Image]],
     images: np.ndarray of shape (height, width, 3) or (num_frames, height, width, 3)
         The image to display.
     masks: np.ndarray of shape (height, width, 3) or (num_frames, height, width, 3)
+        The mask to overlay on the image.
+    alpha: float
+        The alpha value to use when overlaying the mask.
     key: str or None
         An optional key that uniquely identifies this component. If this is
         None, and the component's arguments are changed, the component will
@@ -78,6 +82,7 @@ def overlay(images: Union[np.ndarray, List[Image]],
                                       alpha=alpha,
                                       key=key,
                                       toggleLabel=toggle_label,
+                                      autoplay=autoplay,
                                       default=0)
 
     return component_value
@@ -86,9 +91,10 @@ def overlay(images: Union[np.ndarray, List[Image]],
 def heatmap_visualizer(images: np.ndarray,
                        masks: Union[np.ndarray, None] = None,
                        colormap: int = cv2.COLORMAP_JET,
-                       alpha: float = 0.5,
                        key: str = None,
-                       toggle_label: str = "Display Heatmap"):
+                       toggle_label: str = "Display Heatmap",
+                       *args, **kwargs
+                       ):
     """Create a new instance of "heatmap_visualizer".
 
     Parameters
@@ -124,4 +130,4 @@ def heatmap_visualizer(images: np.ndarray,
     else:
         heatmaps = []
 
-    return overlay(images=images, masks=heatmaps, alpha=alpha, key=key, toggle_label=toggle_label)
+    return overlay(images=images, masks=heatmaps, key=key, toggle_label=toggle_label, *args, **kwargs)

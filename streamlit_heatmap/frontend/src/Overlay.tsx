@@ -19,6 +19,7 @@ import { Button } from "./components/ui/button";
 import { Settings as SettingsIcon } from "lucide-react";
 
 import { decompressImages } from "./utils";
+import VideoPlayerControls from "@/components/VideoControls";
 
 interface OverlayProps {
   images: Uint8Array;
@@ -28,6 +29,7 @@ interface OverlayProps {
   numFrames: number;
   alpha: number;
   toggleLabel: string;
+  autoplay?: boolean;
 }
 
 const Overlay: React.FC<ComponentProps> = (props: any) => {
@@ -39,6 +41,7 @@ const Overlay: React.FC<ComponentProps> = (props: any) => {
     numFrames,
     alpha: alphaInit,
     toggleLabel,
+    autoplay = false,
   }: OverlayProps = props.args;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [images, setImages] = useState<HTMLImageElement[]>([]);
@@ -46,6 +49,10 @@ const Overlay: React.FC<ComponentProps> = (props: any) => {
   const [displaymask, setDisplayMask] = useState<boolean>(false);
   const [alpha, setAlpha] = useState<number>(alphaInit);
   const [frameIdx, setFrameIdx] = useState<number>(0);
+
+  // options
+  const [displayControls, setDisplayControls] = useState<boolean>(true);
+  const [loop, setLoop] = useState<boolean>(false);
 
   useEffect(() => {
     Streamlit.setFrameHeight();
@@ -119,6 +126,23 @@ const Overlay: React.FC<ComponentProps> = (props: any) => {
                   onValueChange={(newAlpha) => setAlpha(newAlpha[0])}
                 />
               </div>
+              <div className="py-2">
+                <div className="flex items-center px-2 py-1">
+                  <Label>Controls</Label>
+                  <div className="flex w-full justify-end">
+                    <Switch
+                      checked={displayControls}
+                      onCheckedChange={setDisplayControls}
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center px-2 py-1">
+                  <Label>Loop</Label>
+                  <div className="flex w-full justify-end">
+                    <Switch checked={loop} onCheckedChange={setLoop} />
+                  </div>
+                </div>
+              </div>
             </SheetContent>
           </Sheet>
         </div>
@@ -135,12 +159,13 @@ const Overlay: React.FC<ComponentProps> = (props: any) => {
         onClick={handleCanvasClick}
       ></canvas>
       {numFrames > 1 && (
-        <Slider
-          value={[frameIdx]}
-          min={0}
-          max={numFrames - 1}
-          step={1}
-          onValueChange={(newFrameIdx) => setFrameIdx(newFrameIdx[0])}
+        <VideoPlayerControls
+          frameIdx={frameIdx}
+          setFrameIdx={setFrameIdx}
+          numFrames={numFrames}
+          loop={loop}
+          autoplay={autoplay}
+          className={displayControls ? "" : "hidden"}
         />
       )}
     </div>
