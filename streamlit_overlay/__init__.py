@@ -96,14 +96,13 @@ def overlay(images: Union[np.ndarray, List[Image]],
     return component_value
 
 
-def heatmap_visualizer(images: np.ndarray,
+def heatmap_overlay(images: np.ndarray,
                        masks: Union[np.ndarray, None] = None,
                        colormap: int = cv2.COLORMAP_JET,
-                       key: str = None,
                        toggle_label: str = "Display Heatmap",
                        *args, **kwargs
                        ):
-    """Create a new instance of "heatmap_visualizer".
+    """Create a new instance of "heatmap_overlay".
 
     Parameters
     ----------
@@ -113,10 +112,6 @@ def heatmap_visualizer(images: np.ndarray,
         The mask to overlay on the image.
     colormap: int
         The OpenCV colormap to use when overlaying the mask.
-    key: str or None
-        An optional key that uniquely identifies this component. If this is
-        None, and the component's arguments are changed, the component will
-        be re-mounted in the Streamlit frontend and lose its current state.
 
     Returns
     -------
@@ -138,4 +133,4 @@ def heatmap_visualizer(images: np.ndarray,
     else:
         heatmaps = []
 
-    return overlay(images=images, masks=heatmaps, key=key, toggle_label=toggle_label, *args, **kwargs)
+    return overlay(images=images, masks=heatmaps, toggle_label=toggle_label, *args, **kwargs)

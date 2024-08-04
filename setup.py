@@ -12,7 +12,7 @@ setuptools.setup(
     version="0.0.1",
     author="Jens Rahnfeld",
     author_email="",
-    description="Streamlit component that allows you add overlays to images",
+    description="Streamlit component that simplifies adding overlays to images",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="",
