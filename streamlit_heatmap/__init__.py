@@ -1,14 +1,15 @@
 import os
-from typing import Union
+from typing import Union, List
 
 import cv2
 import numpy as np
+from PIL.Image import Image
 import streamlit.components.v1 as components
 
 from .utils import compress_images
 
 
-_RELEASE = False
+_RELEASE = True
 
 # Declare a Streamlit component. `declare_component` returns a function
 # that is used to create instances of the component. We're naming this
@@ -23,20 +24,71 @@ _RELEASE = False
 
 if not _RELEASE:
     _component_func = components.declare_component(
-        "heatmap_visualizer",
+        "overlay",
         url="http://localhost:3001",
     )
 else:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
     build_dir = os.path.join(parent_dir, "frontend", "build")
-    _component_func = components.declare_component("heatmap_visualizer", path=build_dir)
+    _component_func = components.declare_component("overlay", path=build_dir)
+
+
+def overlay(images: Union[np.ndarray, List[Image]],
+            masks: Union[np.ndarray, List[Image]] = [],
+            alpha: float = 0.5,
+            key: str = None,
+            toggle_label: str = "Display Overlay"):
+    """Create a new instance of "Overlay".
+
+    Parameters
+    ----------
+    images: np.ndarray of shape (height, width, 3) or (num_frames, height, width, 3)
+        The image to display.
+    masks: np.ndarray of shape (height, width, 3) or (num_frames, height, width, 3)
+    key: str or None
+        An optional key that uniquely identifies this component. If this is
+        None, and the component's arguments are changed, the component will
+        be re-mounted in the Streamlit frontend and lose its current state.
+
+    Returns
+    -------
+    int
+    """
+    assert isinstance(images, (np.ndarray, list))
+
+    if isinstance(images, np.ndarray):
+        if len(images.shape) == 3:
+            images = images[None, :]
+        num_frames, height, width, _ = images.shape
+    elif all(isinstance(image, Image) for image in images):
+        num_frames = len(images)
+        height, width = images[0].height, images[0].width
+    else:
+        raise ValueError("Expected 'images' to be a numpy array or a list of PIL.Image objects.")
+
+    if isinstance(masks, np.ndarray):
+        if len(masks.shape) == 3:
+            masks = masks[None, :]
+
+    component_value = _component_func(images=compress_images(images),
+                                      masks=compress_images(masks),
+                                      width=width,
+                                      height=height,
+                                      numFrames=num_frames,
+                                      alpha=alpha,
+                                      key=key,
+                                      toggleLabel=toggle_label,
+                                      default=0)
+
+    return component_value
 
 
 def heatmap_visualizer(images: np.ndarray,
                        masks: Union[np.ndarray, None] = None,
                        colormap: int = cv2.COLORMAP_JET,
                        alpha: float = 0.5,
-                       key: str = None):
+                       key: str = None,
+                       toggle_label: str = "Display Heatmap"):
     """Create a new instance of "heatmap_visualizer".
 
     Parameters
@@ -58,14 +110,9 @@ def heatmap_visualizer(images: np.ndarray,
     """
     if len(images.shape) == 3:
         images = images[None, :]
-    num_frames, height, width, num_channels = images.shape
+    num_frames, height, width, _ = images.shape
 
-    if masks is None:
-        mask = np.zeros((height, width), dtype=np.uint8)
-        heatmap = cv2.applyColorMap(np.uint8(255 * mask), colormap)
-        heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
-        heatmaps = np.repeat(heatmap[None, :], repeats=num_frames, axis=0)
-    else:
+    if isinstance(masks, np.ndarray):
         if len(masks.shape) == 2:
             masks = masks[None, :]
         heatmaps = np.zeros((num_frames, height, width, 3), dtype=np.uint8)
@@ -74,14 +121,7 @@ def heatmap_visualizer(images: np.ndarray,
             heatmap = cv2.applyColorMap(np.uint8(255 * mask), colormap)
             heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
             heatmaps[idx] = heatmap
+    else:
+        heatmaps = []
 
-    component_value = _component_func(images=compress_images(images),
-                                      heatmaps=compress_images(heatmaps),
-                                      width=width,
-                                      height=height,
-                                      numFrames=num_frames,
-                                      alpha=alpha,
-                                      key=key,
-                                      default=0)
-
-    return component_value
+    return overlay(images=images, masks=heatmaps, alpha=alpha, key=key, toggle_label=toggle_label)

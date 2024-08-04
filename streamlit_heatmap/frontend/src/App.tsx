@@ -22,26 +22,28 @@ import { decompressImages } from "./utils";
 
 interface AppProps {
   images: Uint8Array;
-  heatmaps: Uint8Array;
+  masks: Uint8Array;
   width: number;
   height: number;
   numFrames: number;
   alpha: number;
+  toggleLabel: string;
 }
 
 const App: React.FC<ComponentProps> = (props: any) => {
   const {
     images: imagesCompressed,
-    heatmaps: heatmapsCompressed,
+    masks: masksCompressed,
     width,
     height,
     numFrames,
     alpha: alphaInit,
+    toggleLabel,
   }: AppProps = props.args;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [images, setImages] = useState<HTMLImageElement[]>([]);
-  const [heatmaps, setHeatmaps] = useState<HTMLImageElement[]>([]);
-  const [displayheatmap, setDisplayheatmap] = useState<boolean>(false);
+  const [masks, setMasks] = useState<HTMLImageElement[]>([]);
+  const [displaymask, setDisplayMask] = useState<boolean>(false);
   const [alpha, setAlpha] = useState<number>(alphaInit);
   const [frameIdx, setFrameIdx] = useState<number>(0);
 
@@ -55,9 +57,9 @@ const App: React.FC<ComponentProps> = (props: any) => {
   }, [imagesCompressed]);
 
   useEffect(() => {
-    if (!heatmapsCompressed) return;
-    setHeatmaps(decompressImages(heatmapsCompressed));
-  }, [heatmapsCompressed]);
+    if (!masksCompressed) return;
+    setMasks(decompressImages(masksCompressed));
+  }, [masksCompressed]);
 
   useEffect(() => {
     if (images.length == 0 || !canvasRef.current) return;
@@ -65,16 +67,16 @@ const App: React.FC<ComponentProps> = (props: any) => {
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return;
 
-    if (displayheatmap && heatmaps.length > 0) {
+    if (displaymask && masks.length > 0) {
       ctx.globalAlpha = 1 - alpha;
       ctx.drawImage(images[frameIdx], 0, 0, width, height);
       ctx.globalAlpha = alpha;
-      ctx.drawImage(heatmaps[frameIdx], 0, 0, width, height);
+      ctx.drawImage(masks[frameIdx], 0, 0, width, height);
     } else {
       ctx.globalAlpha = 1.0;
       ctx.drawImage(images[frameIdx], 0, 0, width, height);
     }
-  }, [images, heatmaps, displayheatmap, alpha, frameIdx]);
+  }, [images, masks, displaymask, alpha, frameIdx]);
 
   // return the mouse pointer click coordinates in the images coordinate system
   const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -121,11 +123,8 @@ const App: React.FC<ComponentProps> = (props: any) => {
           </Sheet>
         </div>
         <div className="flex w-full justify-end items-center space-x-2">
-          <Label>Display heatmaps</Label>
-          <Switch
-            checked={displayheatmap}
-            onCheckedChange={setDisplayheatmap}
-          />
+          <Label>{toggleLabel}</Label>
+          <Switch checked={displaymask} onCheckedChange={setDisplayMask} />
         </div>
       </div>
       <canvas

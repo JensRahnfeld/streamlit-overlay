@@ -14,19 +14,19 @@ def compress_images(images, format='JPEG'):
 
     Parameters
     ----------
-    images: np.ndarray of shape (num_frames, height, width, 3)
+    images: np.ndarray of shape (num_frames, height, width, 3) | List[PIL.Image]
         The images to compress.
 
     Returns
     -------
     bytes
     """
-    num_frames = images.shape[0]
     byte_arrays = []
 
-    for i in range(num_frames):
+    for image in images:
         # Convert each frame (numpy array) to a PIL Image
-        image = Image.fromarray(images[i])
+        if isinstance(image, np.ndarray):
+            image = Image.fromarray(image)
         # Save the image to a byte buffer as JPEG
         with io.BytesIO() as buffer:
             image.save(buffer, format=format)
