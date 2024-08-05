@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=69.5"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "streamlit-overlay"
+version = "0.0.1"
+authors = [
+  { name="Jens Rahnfeld" },
+]
+description = "Streamlit component that allows you add overlays to images"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+]
+
+dependencies = [
+    "opencv-python>=4.6.0.66",
+    "streamlit>=1.22.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/JensRahnfeld/streamlit-overlay"
+Issues = "https://github.com/JensRahnfeld/streamlit-overlay/issues"
